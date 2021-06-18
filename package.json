@@ -1,0 +1,16 @@
+{
+  "name": "@yanux/skeletron",
+  "version": "1.0.0",
+  "description": "YanuX Skeletron",
+  "scripts": {
+    "start": "npm run serve",
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "serve": "npx serve -l 3008"
+  },
+  "author": "Pedro Albuquerque Santos <pedro@albuquerques.net>",
+  "license": "AGPL-3.0-or-later",
+  "dependencies": {
+    "serve": "^12.0.0",
+    "@yanux/coordinator": "file:../Coordinator"
+  }
+}
