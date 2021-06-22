@@ -1,20 +1,96 @@
 body {
     font-family: Arial, Helvetica, sans-serif;
+    margin: 0;
+    padding: 0;
 }
+
+nav {
+    padding: 8px;
+    background: #777;
+    color: white;
+    text-align: right;
+    z-index: 999;
+}
+
+nav .nav-button {
+    display: inline;
+    margin: 0;
+    padding: 6px;
+    border: none;
+    border-radius: 4px;
+    background-color: #aaa;
+    font-size: inherit;
+    text-decoration: none;
+    cursor: pointer;
+    color: white;
+}
+
+a:link.header-button,
+a:visited.header-button,
+a:hover.header-button {
+    color: white;
+}
+
+:active.header-button,
+a:active.header-button {
+    color: black;
+}
+
 
 #display {
     font-size: 2em;
     margin: 24px 0;
 }
 
+.container {
+    width: fit-content;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 4px;
+}
+
 #form {
+    font-size: 1.5em;
     width: fit-content;
     border: 1px solid black;
     border-radius: 8px;
     padding: 8px;
+    margin: auto;
+}
+
+#form label {
+    font-weight: bold;
+    padding: 8px;
+}
+
+#form input {
+    font-size: 1em;
 }
 
 #form label,
-#form input{
+#form input {
     display: block;
+}
+
+main {
+    display: none;
+    text-align: center;
+}
+
+#overlay {
+    position: absolute;
+    left: 0;
+    top: 34px;
+    width: 100%;
+    height: calc(100% - 34px);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: #aaaa;
+    color: #fff;
+    font-size: 4.0em;
+    z-index: 999;
 }

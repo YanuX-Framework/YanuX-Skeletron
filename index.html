@@ -1,31 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="favicon.ico">
+    <link rel="manifest" href="manifest.json"></link>
     <link rel="stylesheet" href="styles.css">
     <script src="node_modules/@yanux/coordinator/dist/lib.js"></script>
     <script src="scripts.js"></script>
     <title>YanuX Skeletron</title>
 </head>
-<body onload="updateBmi()">
+
+<body>
+    <nav>
+        <div id="login"><a class="nav-button" href="#">Login</a></div>
+    </nav>
     <header>
-        <h1>YanuX Skeletron</h1>
-        <div class="container">
-            <yanux-resource-management id="yxrm" />
-        </div>
+        <div id="overlay">Loading</div>
     </header>
     <main>
-        <div id="display">
-        BMI: <span id="result"></span>
+        <h1>YanuX Skeletron</h1>
+        <div class="container">
+            <h2>Saved Values</h2>
+            <yanux-resource-management id="yxrm" />
         </div>
+        <div id="display">BMI: <span id="result"></span></div>
         <div id="form">
             <form>
                 <label for="weight">Weight (Kg):</label>
-                <input type="number" min="0" step="1" id="weight" name="weight" value="0" onchange="updateBmi()">
+                <input type="number" min="0" step="1" id="weight" name="weight" value="0">
                 <label for="height">Height (m):</label>
-                <input type="number" min="0" step="0.01" id="height" name="height" value="0.00" onchange="updateBmi()">
+                <input type="number" min="0" step="0.01" id="height" name="height" value="0.00">
             </form>
         </div>
     </main>
@@ -35,4 +42,5 @@
         </div>
     </footer>
 </body>
+
 </html>
