@@ -78,6 +78,11 @@ main {
     text-align: center;
 }
 
+footer {
+    display: none;
+    margin-top: 16px;
+}
+
 #overlay {
     position: absolute;
     left: 0;

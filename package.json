@@ -2,15 +2,29 @@
   "name": "@yanux/skeletron",
   "version": "1.0.0",
   "description": "YanuX Skeletron",
+  "private": true,
   "scripts": {
-    "start": "npm run serve",
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "serve": "npx serve -l 3008"
+    "package": "npx webpack",
+    "serve": "npx serve -l 3008 dist",
+    "watch": "npm run watch:package",
+    "watch:package": "npx webpack --watch",
+    "start": "npm-run-all --parallel serve watch",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "Pedro Albuquerque Santos <pedro@albuquerques.net>",
+  "author": {
+    "name": "Pedro Albuquerque Santos",
+    "email": "pedro@albuquerques.net",
+    "url": "https://pedro.albuquerques.net"
+  },
   "license": "AGPL-3.0-or-later",
   "dependencies": {
-    "serve": "^12.0.0",
-    "@yanux/coordinator": "file:../Coordinator"
+    "@yanux/coordinator": "file:../Coordinator",
+    "serve": "^12.0.0"
+  },
+  "devDependencies": {
+    "copy-webpack-plugin": "^9.0.0",
+    "npm-run-all": "^4.1.5",
+    "webpack": "^5.40.0",
+    "webpack-cli": "^4.7.2"
   }
 }
