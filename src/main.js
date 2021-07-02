@@ -36,7 +36,7 @@ let componentsRuleEngine = null;
 
 /**
  * The definition of component restrictions using our DSL.
- * [TODO:] Possible Exercise or Explanation Needed
+ * [TODO:] Explanation Needed
  */
 const componentsRestrictions = {
     "Display": {
@@ -61,14 +61,10 @@ window.addEventListener('DOMContentLoaded', async function (e) {
     document.getElementsByName('height').item(0).addEventListener('change', updateBmi)
 
     /**
-     * [TODO:] A possible starting point is to comment initAuth() below and just show how the application works in "local mode".
-     */
-    //showUi(true);
-
-    /**
      * Initializing the authentication process which will eventually initialize the YanuX Coordinator components.
      */
     initAuth();
+    //showUi(true);
 });
 
 /**
@@ -76,7 +72,6 @@ window.addEventListener('DOMContentLoaded', async function (e) {
  * Alternatively, it extracts that information from the form inputs.
  * Either way, the current state is written back to the form inputs.
  * 
- * @todo [TODO:] Highlight BMI values based on categorical ranges.
  * @param {any} data - A parameter with the data representing the state of the application 
  * @param {Boolean} reset - A "reset" flag to reset the state back to the initial values.
  */
@@ -102,23 +97,32 @@ async function updateBmi(data, reset = false) {
 
         if (!isNaN(bmiState.result) && isFinite(bmiState.result)) {
             document.getElementById('result').textContent = bmiState.result.toFixed(2);
+            document.getElementById('result').classList.remove('invalid');
+            document.getElementById('result').classList.toggle('underweight', bmiState.result < 18.5);
+            document.getElementById('result').classList.toggle('normal', bmiState.result >= 18.5 && bmiState.result < 25);
+            document.getElementById('result').classList.toggle('overweight', bmiState.result >= 25);
         } else {
             document.getElementById('result').textContent = 'Invalid';
+            document.getElementById('result').classList.add('invalid');
             bmiState.result = null;
         }
 
         /**
-         * [TODO:] Possible Exercise. If "coordinator" is initialized save the current application state to the currently subscribed resource.
+         * If "coordinator" is initialized save the current application state to the currently subscribed resource.
          */
         if (coordinator) {
+            /**
+             * <Exercise 1>: Save the current application state to the currently subscribed resource.
+             * TIP: The current application state is saved locally in the "bmiState" variable.
+             */
             try {
-                console.log('[YanuX Skeletron] New BMI State', bmiState, 'Subscribed Resource Id', coordinator.subscribedResourceId);
-                /**
-                 * Only this line is really important!
-                 */
-                const result = await coordinator.setResourceData(bmiState, coordinator.subscribedResourceId);
+                console.log('[YanuX Skeletron] New BMI State', bmiState);
+                const result = await coordinator.setResourceData(bmiState);
                 console.log('[YanuX Skeletron] Resource Data was Set:', result);
             } catch (e) { console.error('[YanuX Skeletron] Error Setting Resource Data:', e); }
+            /**
+             * </Exercise 1>
+             */
         }
     }
 }
@@ -143,7 +147,7 @@ function showUi(minimal = false) {
 
 /**
  * Function that initializes the authentication process which will eventually initialize the YanuX Coordinator components.
- * [TODO:] Possible Exercise or Explanation Needed
+ * [TODO:] Explanation Needed
  */
 function initAuth() {
     /**
@@ -184,7 +188,7 @@ function initAuth() {
         /**
          * We initialize the Credentials and pass it to a function
          * that will use these credentials to create a FeathersCoordinator instance.
-         * [TODO:] Possible Exercise or Explanation Needed.
+         * [TODO:] Explanation Needed.
          */
         initYanuxCoordinator(new Credentials("yanux", [storedAccessToken, CLIENT_ID]));
         showUi();
@@ -208,7 +212,7 @@ function initAuth() {
 async function initYanuxCoordinator(credentials) {
     /**
      * Create a FeathersCoordinator instance with the provided BROKER_URL, LOCAL_DEVICE_URL, CLIENT_ID and credentials.
-     * [TODO:] Possible Exercise or Explanation Needed.
+     * [TODO:] Explanation Needed.
      */
     coordinator = new FeathersCoordinator(BROKER_URL, LOCAL_DEVICE_URL, CLIENT_ID, credentials);
     console.log('[YanuX Skeletron] Coordinator Created:', coordinator);
@@ -219,33 +223,52 @@ async function initYanuxCoordinator(credentials) {
          */
         const [data, proxemics, resourceId] = await coordinator.init();
         console.log('[YanuX Skeletron] Coordinator Initialized Data:', data, 'Proxemics:', proxemics, 'Resource Id:', resourceId);
-        /**
-         * Subscribe to the events provided by the Coordinator by providing handler functions.
-         * In the case of "subscribeResource" you should also provide the Id of the resource 
-         * you are interested in. The "subscribedResourceId" property has the Id of the 
-         * currently subscribed to resource.
-         * 
-         * [NOTE:] "subscribeEvents" and "subscribeReconnects" is not being used in this example.
-         * [TODO:] Possible Exercise or Explanation Needed.
-         */
-        coordinator.subscribeResource(resourceSubscriptionHandler, coordinator.subscribedResourceId);
-        coordinator.subscribeResources(resourcesSubscriptionHandler);
-        coordinator.subscribeResourceSubscription(resourceSubscriptionSubscriptionHandler);
-        coordinator.subscribeProxemics(proxemicsSubscriptionHandler);
-        coordinator.subscribeInstances(instancesSubscriptionHandler);
 
         /**
          * Create a "ComponentsRuleEngine" instance by providing the current UUID of the instance 
          * that is currently being managed by the Coordinator, the UUID of the Device there the
          * current Coordinator instance is running and previously defined components restrictions.
-         * 
-         * [TODO:] Possible Exercise or Explanation Needed.
+         */
+        /**
+         * <Exercise 2>: Initialize the "ComponentsRuleEngine".
+         * TIP: There is a "componentsRuleEngine" variable already defined.
+         * You just need to attribute it to a new "ComponentsRuleEngine" instance. 
          */
         componentsRuleEngine = new ComponentsRuleEngine(
             coordinator.instance.instanceUuid,
             coordinator.device.deviceUuid,
             componentsRestrictions
         );
+        /**
+         * </Exercise 2>: 
+         */
+
+        /**
+         * Subscribe to the events provided by the Coordinator by providing handler functions.
+         * In the case of "subscribeResource" you should also provide the Id of the resource 
+         * you are interested in. The "subscribedResourceId" property has the Id of the 
+         * currently subscribed to resource.
+         */
+
+        /**
+         * <Exercise 3>: Subscribe to changes in a resource that stores the application's UI state.
+         * TIP: There is a function named "resourceSubscriptionHandler" that is ready to be used.
+         */
+        coordinator.subscribeResource(resourceSubscriptionHandler);
+        /**
+         * </Exercise 3>
+         */
+        coordinator.subscribeResources(resourcesSubscriptionHandler);
+        coordinator.subscribeResourceSubscription(resourceSubscriptionSubscriptionHandler);
+        /**
+         * <Exercise 5>: Subscribe to changes in the proxemic relationships of the devices running the application.
+         * TIP: There is a function named "proxemicsSubscriptionHandler" that is ready to be used.
+         */
+        coordinator.subscribeProxemics(proxemicsSubscriptionHandler);
+        /**
+         * </Exercise 5>
+         */
+        coordinator.subscribeInstances(instancesSubscriptionHandler);
 
         /**
          * Also initialize the YanuX Resource Management Element, 
@@ -265,13 +288,20 @@ async function initYanuxCoordinator(credentials) {
  * we can just pass it to the "updateBmi" function and it will update the UI
  * of the application so that it is kept in sync with other devices.
  * 
- * @todo [TODO:] Possible Exercise or Explanation Needed. 
  * @param {any} data 
  * @param {String} eventType 
  */
 function resourceSubscriptionHandler(data, eventType) {
+    /**
+     * <Exercise 4>: Implement the body of the "resourceSubscriptionHandler" function.
+     * The UI of the application should be updated with the newly received data from the subscribed resource.
+     * TIP: You should use the "updateBmi" function.
+     */
     console.log('[YanuX Skeletron] Resource Subscriber Handler Data:', data, 'Event Type:', eventType);
     updateBmi(data);
+    /**
+     * </Exercise 4>
+     */
 }
 
 /**
@@ -281,7 +311,6 @@ function resourceSubscriptionHandler(data, eventType) {
  * we can simply call/develop a helper method (e.g., "updateResources") that will keep
  * the YanuX Resource Management Element up-to-date with the "fresh" resources.
  * 
- * @todo [TODO:] Possible Exercise or Explanation Needed. 
  * @param {any} data 
  * @param {String} eventType 
  */
@@ -298,7 +327,7 @@ function resourcesSubscriptionHandler(data, eventType) {
  * 
  * We should ignore "removed" eventTypes. 
  * However, under normal circumstances they should (almost) never occur. 
- * @todo [TODO:] Possible Exercise or Explanation Needed. 
+ * 
  * @param {any} data 
  * @param {String} eventType 
  */
@@ -313,29 +342,37 @@ async function resourceSubscriptionSubscriptionHandler(data, eventType) {
 }
 
 /**
- * Event handler for "subscribeInstances"
- * 
- * Whenever there are changes in the available instances we should update
- * the distribution UI components. We can call/develop a helper method 
- * (e.g., "updateComponentsDistribution") that does this redistribution.
- * 
- * @todo [TODO:] Possible Exercise or Explanation Needed. 
- * @param {any} data 
- * @param {String} eventType 
- */
-function proxemicsSubscriptionHandler(data, eventType) {
-    console.log('[YanuX Skeletron] Proxemics Subscriber Handler Data:', data, 'Event Type:', eventType);
-    updateComponentsDistribution();
-}
-
-/**
  * Event handler for "subscribeProxemics"
  * 
  * Similarly to instances, a change in the proxemic relationship of devices
  * may require a redistribution of UI components. Therefore, we can call/develop
  * a helper method (e.g., "updateComponentsDistribution") that does this redistribution.
  * 
- * @todo [TODO:] Possible Exercise or Explanation Needed. 
+ * @param {any} data 
+ * @param {String} eventType 
+ */
+function proxemicsSubscriptionHandler(data, eventType) {
+    /**
+     * <Exercise 6>: You get information of change in proxemics. 
+     * When that happens, the easiest thing to do is to call a function that updates the distribution of UI components.
+     * TIP: You should call the "updateComponentsDistribution" function that you must also implement as part of another exercise.
+     */
+    console.log('[YanuX Skeletron] Proxemics Subscriber Handler Data:', data, 'Event Type:', eventType);
+    updateComponentsDistribution();
+    /**
+     * </Exercise 6>
+     */
+
+}
+
+
+/**
+ * Event handler for "subscribeInstances"
+ * 
+ * Whenever there are changes in the available instances we should update
+ * the distribution UI components. We can call/develop a helper method 
+ * (e.g., "updateComponentsDistribution") that does this redistribution.
+ * 
  * @param {any} data 
  * @param {String} eventType 
  */
@@ -347,8 +384,6 @@ function instancesSubscriptionHandler(data, eventType) {
 /**
  * Helper method (e.g., "updateResources") that keeps the 
  * YanuX Resource Management Element up-to-date with the "fresh" resources.
- * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  */
 async function updateResources() {
     console.log('[YanuX Skeletron] Updating Resources');
@@ -375,13 +410,17 @@ async function updateResources() {
  * redistributes that UI components according to our restrictions by using the 
  * ComponentsRuleEngine. Thankfully, the Coordinator provides a helpful method 
  * (i.e., "updateComponentsDistribution") that does most of the work for us.
- * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  */
 function updateComponentsDistribution() {
+    /**
+     * <Exercise 7>: You need to update the distribution of UI components.
+     * TIP: There is a "updateComponentsDistribution" method on the Coordinator that can help you with that.
+     */
     const componentsDistributionElement = document.getElementById('yxcd');
-    coordinator.updateComponentsDistribution(componentsDistributionElement, componentsRuleEngine,
-        false, coordinator.instance.id, configureComponents);
+    coordinator.updateComponentsDistribution(componentsRuleEngine, configureComponents, componentsDistributionElement);
+    /**
+     * </Exercise 7>
+     */
 }
 
 /**
@@ -389,7 +428,7 @@ function updateComponentsDistribution() {
  * Based on that information, it can then change the CSS display property of the corresponding
  * HTML elements to show/hide them.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
+ * [TODO:] Explanation Needed. 
  * @param {ComponentsDistribution} componentsConfig 
  */
 function configureComponents(componentsConfig) {
@@ -406,12 +445,19 @@ function configureComponents(componentsConfig) {
  * for each of the supported events and call "updateResources" to make sure that it is
  * populated with the most up-to-date resources.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
+ * [TODO:] Explanation Needed.
  */
 function initYanuxResourceManagementElement() {
     console.log('[YanuX Skeletron] Initializing Resource Management Element');
     const resourceManagementElement = document.getElementById('yxrm');
+    /**
+     * <Exercise 8>: Add an event listener to the "resourceManagementElement" that listens for the "resource-selected" event.
+     * TIP: There is a function called "resourceSelected" that you can use as an event listener. You should implement its body in the next exercise.
+     */
     resourceManagementElement.addEventListener('resource-selected', resourceSelected);
+    /**
+     * </Exercise 8>
+     */
     resourceManagementElement.addEventListener('create-resource', createResource);
     resourceManagementElement.addEventListener('rename-resource', renameResource);
     resourceManagementElement.addEventListener('delete-resource', deleteResource);
@@ -433,11 +479,16 @@ function initYanuxResourceManagementElement() {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function resourceSelected(e) {
     console.log('[YanuX Skeletron] Resource Selected:', e.detail);
+    /**
+     * <Exercise 9>: 
+     * Implement the body of the function that gets called when a user selects a resource in the YanuX Resource Management Element.
+     * TIP: The Coordinator has a method called "selectResource" that can be used to select a new resource. 
+     * Once the new selection is done you can use the "updateBmi" function to update the UI of the application with the new application state.
+     */
     try {
         const data = await coordinator.selectResource(resourceSubscriptionHandler, e.detail.selectedResourceId);
         console.log('[YanuX Skeletron] Selected Resource Data:', data);
@@ -446,6 +497,9 @@ async function resourceSelected(e) {
         console.error('[YanuX Skeletron] Error Selecting Resource:', e);
         alert('Error Selecting Resource', e.message);
     }
+    /**
+     * </Exercise 9>
+     */
 }
 
 /**
@@ -465,7 +519,6 @@ async function resourceSelected(e) {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function createResource(e) {
@@ -490,7 +543,6 @@ async function createResource(e) {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function renameResource(e) {
@@ -517,7 +569,6 @@ async function renameResource(e) {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function deleteResource(e) {
@@ -544,7 +595,6 @@ async function deleteResource(e) {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function shareResource(e) {
@@ -569,7 +619,6 @@ async function shareResource(e) {
  * 
  * If any kind of error/exception is raised an alert can be shown to the user.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
  * @param {CustomEvent} e 
  */
 async function unshareResource(e) {
@@ -588,12 +637,19 @@ async function unshareResource(e) {
  * for each of the supported events and call "updateComponentsDistribution" to make sure that it is
  * populated with the most up-to-date distribution of UI components.
  * 
- * [TODO:] Possible Exercise or Explanation Needed. 
+ * [TODO:] Explanation Needed. 
  */
 function initYanuxComponentsDistributionElement() {
     console.log('[YanuX Skeletron] Initializing Components Distribution Element')
     const componentsDistributionElement = document.getElementById('yxcd');
+    /**
+     * <Exercise 10>: Add an event listener to the "componentsDistributionElement" that listens for the "updated-components-distribution" event.
+     * TIP: There is a function called "updatedComponentsDistribution" that you can use as an event listener. You should implement its body in the next exercise.
+     */
     componentsDistributionElement.addEventListener('updated-components-distribution', updatedComponentsDistribution);
+    /**
+     * </Exercise 10>
+     */
     componentsDistributionElement.addEventListener('reset-auto-components-distribution', resetAutoComponentsDistribution);
     updateComponentsDistribution()
 }
@@ -611,7 +667,14 @@ function initYanuxComponentsDistributionElement() {
  */
 function updatedComponentsDistribution(e) {
     console.log('[YanuX Skeletron] Updating Components Distribution:', e.detail);
+    /**
+     * <Exercise 11>: Implement the body of the function that gets called when a user updates the distribution of components in the YanuX Components Distribution Element.
+     * TIP: The Coordinator has a method called "distributeComponents" that can receive the event to set a new distribution of components automatically.
+     */
     coordinator.distributeComponents(e);
+    /**
+     * </Exercise 11>
+     */
 }
 
 /**

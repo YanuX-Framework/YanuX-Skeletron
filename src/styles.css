@@ -25,6 +25,16 @@ nav .nav-button {
     color: white;
 }
 
+main {
+    display: none;
+    text-align: center;
+}
+
+footer {
+    display: none;
+    margin-top: 16px;
+}
+
 a:link.header-button,
 a:visited.header-button,
 a:hover.header-button {
@@ -36,19 +46,29 @@ a:active.header-button {
     color: black;
 }
 
+#overlay {
+    position: absolute;
+    left: 0;
+    top: 34px;
+    width: 100%;
+    height: calc(100% - 34px);
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    flex-direction: column;
+    text-align: center;
+    background-color: #aaaa;
+    color: #fff;
+    font-size: 4.0em;
+    z-index: 999;
+}
+
 
 #display {
     font-size: 2em;
     margin: 24px 0;
 }
 
-.container {
-    width: fit-content;
-    margin: auto;
-    border: 1px solid black;
-    border-radius: 8px;
-    padding: 4px;
-}
 
 #form {
     font-size: 1.5em;
@@ -73,29 +93,52 @@ a:active.header-button {
     display: block;
 }
 
-main {
-    display: none;
-    text-align: center;
+.container {
+    width: fit-content;
+    margin: auto;
+    border: 1px solid black;
+    border-radius: 8px;
+    padding: 4px;
 }
 
-footer {
-    display: none;
-    margin-top: 16px;
+#result {
+    padding: 8px;
+    border-radius: 8px;
 }
 
-#overlay {
-    position: absolute;
-    left: 0;
-    top: 34px;
-    width: 100%;
-    height: calc(100% - 34px);
-    display: flex;
-    justify-content: center;
-    align-content: center;
-    flex-direction: column;
-    text-align: center;
-    background-color: #aaaa;
+#result::after {
+    font-size: 0.67em;
+    vertical-align: middle;
+}
+
+.underweight {
     color: #fff;
-    font-size: 4.0em;
-    z-index: 999;
+    background-color: #00f;
+}
+
+.underweight::after {
+    content: " (Underweight)";
+}
+
+.normal {
+    color: #fff;
+    background-color: #080;
+}
+
+.normal::after {
+    content: " (Normal)";
+}
+
+.overweight {
+    color: #fff;
+    background-color:#f00;
+}
+
+.overweight::after {
+    content: " (Overweight)";
+}
+
+.invalid {
+    color: #fff;
+    background-color: #777;
 }
