@@ -5,7 +5,7 @@
 /**
  * Importing components/classes from the YanuX Coordinator library
  */
-import {
+ import {
     FeathersCoordinator,
     Credentials,
     ComponentsRuleEngine,
@@ -144,10 +144,9 @@ async function updateBmi(data, reset = false) {
              * <Exercise 1>: Save the current application state to the currently subscribed resource.
              * TIP: The current application state is saved locally in the "bmiState" variable.
              */
-            try {
-                const result = await coordinator.setResourceData(bmiState);
-                console.log('[YanuX Skeletron] Resource Data was Set:', result);
-            } catch (e) { console.error('[YanuX Skeletron] Error Setting Resource Data:', e); }
+
+
+            
             /**
              * </Exercise 1>
              */
@@ -253,7 +252,7 @@ async function initYanuxCoordinator(credentials) {
             'Proxemics:', proxemics,
             'Resource Id:', resourceId
         );
-
+        
         /**
          * Create a "ComponentsRuleEngine" instance by providing the current UUID of the instance that is currently
          * being managed by the Coordinator, the UUID of the Device there the current Coordinator instance is running
@@ -264,11 +263,9 @@ async function initYanuxCoordinator(credentials) {
          * TIP: There is a "componentsRuleEngine" variable already defined. You just need to attribute it to a new 
          * "ComponentsRuleEngine" instance. 
          */
-        componentsRuleEngine = new ComponentsRuleEngine(
-            coordinator.instance.instanceUuid,
-            coordinator.device.deviceUuid,
-            componentsRestrictions
-        );
+        
+        
+        
         /**
          * </Exercise 2>
          */
@@ -280,7 +277,9 @@ async function initYanuxCoordinator(credentials) {
          * <Exercise 3>: Subscribe to changes in a resource that stores the application's UI state.
          * TIP: There is a function named "resourceSubscriptionHandler" that is ready to be used.
          */
-        coordinator.subscribeResource(resourceSubscriptionHandler);
+        
+        
+        
         /**
          * </Exercise 3>
          */
@@ -290,7 +289,9 @@ async function initYanuxCoordinator(credentials) {
          * <Exercise 5>: Subscribe to changes in the proxemic relationships of the devices running the application.
          * TIP: There is a function named "proxemicsSubscriptionHandler" that is ready to be used.
          */
-        coordinator.subscribeProxemics(proxemicsSubscriptionHandler);
+        
+        
+
         /**
          * </Exercise 5>
          */
@@ -321,7 +322,9 @@ function resourceSubscriptionHandler(data, eventType) {
      * The UI of the application should be updated with the newly received data from the subscribed resource.
      * TIP: You should use the "updateBmi" function.
      */
-    updateBmi(data);
+
+
+
     /**
      * </Exercise 4>
      */
@@ -376,7 +379,9 @@ function proxemicsSubscriptionHandler(data, eventType) {
      * When that happens, the easiest thing to do is to call a function that updates the distribution of UI components.
      * TIP: You should call the "updateComponentsDistribution" function that you must also implement as part of another exercise.
      */
-    updateComponentsDistribution();
+
+
+
     /**
      * </Exercise 6>
      */
@@ -416,7 +421,9 @@ function updateComponentsDistribution() {
      * <Exercise 7>: You need to update the distribution of UI components.
      * TIP: There is a "updateComponentsDistribution" method on the Coordinator that can help you with that.
      */
-    coordinator.updateComponentsDistribution(componentsRuleEngine, configureComponents, componentsDistributionElement);
+
+
+
     /**
      * </Exercise 7>
      */
@@ -451,7 +458,9 @@ function initYanuxResourceManagementElement() {
      * TIP: There is a function called "resourceSelected" that you can use as an event listener. You should implement 
      * its body in the next exercise.
      */
-    resourceManagementElement.addEventListener('resource-selected', resourceSelected);
+
+
+
     /**
      * </Exercise 8>
      */
@@ -480,14 +489,9 @@ async function resourceSelected(e) {
      * TIP: The Coordinator has a method called "selectResource" that can be used to select a new resource. 
      * Once the new selection is done you can use the "updateBmi" function to update the UI of the application with the new application state.
      */
-    try {
-        const data = await coordinator.selectResource(resourceSubscriptionHandler, e.detail.selectedResourceId);
-        console.log('[YanuX Skeletron] Selected Resource Data:', data);
-        await updateBmi(data);
-    } catch (e) {
-        console.error('[YanuX Skeletron] Error Selecting Resource:', e);
-        alert('Error Selecting Resource', e.message);
-    }
+    
+    
+
     /**
      * </Exercise 9>
      */
@@ -611,10 +615,9 @@ function initYanuxComponentsDistributionElement() {
      * TIP: There is a function called "updatedComponentsDistribution" that you can use as an event listener. You should
      * implement its body in the next exercise.
      */
-    componentsDistributionElement.addEventListener(
-        'updated-components-distribution',
-        updatedComponentsDistribution
-    );
+
+    
+
     /**
      * </Exercise 10>
      */
@@ -641,7 +644,9 @@ function updatedComponentsDistribution(e) {
      * TIP: The Coordinator has a method called "distributeComponents" that can receive the event to set a new 
      * distribution of components automatically.
      */
-    coordinator.distributeComponents(e);
+
+
+
     /**
      * </Exercise 11>
      */

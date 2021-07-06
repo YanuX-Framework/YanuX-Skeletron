@@ -6,7 +6,8 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="shortcut icon" href="favicon.ico">
-    <link rel="manifest" href="manifest.json"></link>
+    <link rel="manifest" href="manifest.json">
+    </link>
     <link rel="stylesheet" href="styles.css">
     <script src="main.js"></script>
     <title>YanuX Skeletron</title>
@@ -22,8 +23,20 @@
     <main>
         <h1>YanuX Skeletron</h1>
         <div class="container">
-            <h2>Saved Values</h2>
-            <yanux-resource-management id="yxrm" />
+            <h2>Persons</h2>
+            <yanux-resource-management id="yxrm">
+                <span slot="create-resource-title">Create Person</span>
+                <span slot="rename-resource-title">Rename Person</span>
+                <span slot="share-resource-title">Share Person</span>
+                <span slot="delete-resource-title">Delete Person</span>
+                <span slot="unshare-resource-title">Unshare Person</span>
+                <span slot="delete-resource-message">
+                    Are you sure you want to delete the currently selected Person?
+                </span>
+                <span slot="unshare-resource-message">
+                    Are you sure you want to stop the currently selected user from accessing this Person?
+                </span>
+            </yanux-resource-management>
         </div>
         <div id="display">BMI: <span id="result"></span></div>
         <div id="form">

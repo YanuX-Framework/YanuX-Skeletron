@@ -5,7 +5,7 @@
 /**
  * Importing components/classes from the YanuX Coordinator library
  */
-import {
+ import {
     FeathersCoordinator,
     Credentials,
     ComponentsRuleEngine,
