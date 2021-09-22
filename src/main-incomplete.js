@@ -5,7 +5,7 @@
 /**
  * Importing components/classes from the YanuX Coordinator library
  */
- import {
+import {
     FeathersCoordinator,
     Credentials,
     ComponentsRuleEngine,
@@ -88,25 +88,19 @@ window.addEventListener('DOMContentLoaded', async function (e) {
  * @param {Boolean} reset - A "reset" flag to reset the state back to the initial values.
  * <Explanation 4>
  */
-async function updateBmi(data, reset = false) {
+async function updateBmi(data) {
     const weight = data ? data.weight : null;
     const height = data ? data.height : null;
     const result = data ? data.result : null;
 
     console.log('[YanuX Skeletron] Current BMI State', bmiState, 'Update BMI Weight:', weight, 'Height:', height, 'Result', result);
     if (weight !== bmiState.weight || height !== bmiState.height || result !== bmiState.result) {
-        if (reset) {
-            bmiState.weight = 0.0;
-            bmiState.height = 0.0;
-            bmiState.result = null;
-        } else {
-            bmiState.weight = (weight === null || weight === undefined) ?
-                parseFloat(document.getElementById('weight').value) : weight;
-            bmiState.height = (height === null || height === undefined) ?
-                parseFloat(document.getElementById('height').value) : height;
-            bmiState.result = (result === null || result === undefined) ?
-                bmiState.weight / Math.pow(bmiState.height, 2) : result;
-        }
+        bmiState.weight = (weight === null || weight === undefined) ?
+            parseFloat(document.getElementById('weight').value) : weight;
+        bmiState.height = (height === null || height === undefined) ?
+            parseFloat(document.getElementById('height').value) : height;
+        bmiState.result = (result === null || result === undefined) ?
+            bmiState.weight / Math.pow(bmiState.height, 2) : result;
 
         document.getElementsByName('weight').item(0).value = bmiState.weight;
         document.getElementsByName('height').item(0).value = bmiState.height.toFixed(2);
@@ -146,7 +140,7 @@ async function updateBmi(data, reset = false) {
              */
 
 
-            
+
             /**
              * </Exercise 1>
              */
@@ -252,7 +246,7 @@ async function initYanuxCoordinator(credentials) {
             'Proxemics:', proxemics,
             'Resource Id:', resourceId
         );
-        
+
         /**
          * Create a "ComponentsRuleEngine" instance by providing the current UUID of the instance that is currently
          * being managed by the Coordinator, the UUID of the Device there the current Coordinator instance is running
@@ -263,9 +257,9 @@ async function initYanuxCoordinator(credentials) {
          * TIP: There is a "componentsRuleEngine" variable already defined. You just need to attribute it to a new 
          * "ComponentsRuleEngine" instance. 
          */
-        
-        
-        
+
+
+
         /**
          * </Exercise 2>
          */
@@ -277,9 +271,9 @@ async function initYanuxCoordinator(credentials) {
          * <Exercise 3>: Subscribe to changes in a resource that stores the application's UI state.
          * TIP: There is a function named "resourceSubscriptionHandler" that is ready to be used.
          */
-        
-        
-        
+
+
+
         /**
          * </Exercise 3>
          */
@@ -289,8 +283,8 @@ async function initYanuxCoordinator(credentials) {
          * <Exercise 5>: Subscribe to changes in the proxemic relationships of the devices running the application.
          * TIP: There is a function named "proxemicsSubscriptionHandler" that is ready to be used.
          */
-        
-        
+
+
 
         /**
          * </Exercise 5>
@@ -358,7 +352,7 @@ async function resourceSubscriptionSubscriptionHandler(data, eventType) {
     if (eventType !== 'removed') {
         try {
             const resourceData = await coordinator.selectResource(resourceSubscriptionHandler, data.resource);
-            updateBmi(resourceData, true);
+            updateBmi(resourceData);
         } catch (e) { console.error('[YanuX Skeeltron] Resource Subscription Subscriber Handler Error:', e); }
     }
 }
@@ -489,8 +483,8 @@ async function resourceSelected(e) {
      * TIP: The Coordinator has a method called "selectResource" that can be used to select a new resource. 
      * Once the new selection is done you can use the "updateBmi" function to update the UI of the application with the new application state.
      */
-    
-    
+
+
 
     /**
      * </Exercise 9>
@@ -616,7 +610,7 @@ function initYanuxComponentsDistributionElement() {
      * implement its body in the next exercise.
      */
 
-    
+
 
     /**
      * </Exercise 10>

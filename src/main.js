@@ -5,7 +5,7 @@
 /**
  * Importing components/classes from the YanuX Coordinator library
  */
-import {
+ import {
     FeathersCoordinator,
     Credentials,
     ComponentsRuleEngine,
@@ -16,6 +16,7 @@ import {
  * This is the URL that you can use to connect the YanuX Coordinator to the YanuX Broker.
  */
 const BROKER_URL = `http://${location.hostname}:3002`;
+//const BROKER_URL = 'https://yanux-broker.herokuapp.com';
 
 /**
  * This is the base URL for the services provided by the YanuX Orchestrator (i.e., by the YanuX Scavenger on Android or 
@@ -23,6 +24,7 @@ const BROKER_URL = `http://${location.hostname}:3002`;
  * application.
  */
 const LOCAL_DEVICE_URL = 'http://localhost:3003';
+//const LOCAL_DEVICE_URL = 'https://albuquerques.net/yanux/device0';
 
 /**
  * The ID of the application that was previously registered at the YanuX Auth website.
@@ -79,6 +81,12 @@ window.addEventListener('DOMContentLoaded', async function (e) {
      */
     initAuth();
     //showUi(true);
+    // initYanuxCoordinator(
+    //     new Credentials("yanux",
+    //         ['AMcLG1hwXtZrB_XafwPOFT8PUEdnnoUxpvF0thpaxE2RxTL1fesjDacxkPev2hKec3czVR596prl7OV-qScMa8ux3ac5anv70E6dCAB-tQqevm8fcv-YjItQjFxI0ba8s7_xPcKZi9bYwbTnkd8BkIvUPM-3VsRANOCZGQv0WSGDlpSRi4S2KDdfmOmAEXNrH8EzOKyTlYIQqqfMR8la7aZbREkNC51BCvEMS1tkc7MzyNt1h5zXVOoP3S-aJlrG',
+    //             CLIENT_ID]
+    //     ));
+    //showUi();
 });
 
 /**
@@ -88,32 +96,25 @@ window.addEventListener('DOMContentLoaded', async function (e) {
  * @param {Boolean} reset - A "reset" flag to reset the state back to the initial values.
  * <Explanation 4>
  */
-async function updateBmi(data, reset = false) {
+async function updateBmi(data) {
     const weight = data ? data.weight : null;
     const height = data ? data.height : null;
     const result = data ? data.result : null;
 
     console.log('[YanuX Skeletron] Current BMI State', bmiState, 'Update BMI Weight:', weight, 'Height:', height, 'Result', result);
     if (weight !== bmiState.weight || height !== bmiState.height || result !== bmiState.result) {
-        if (reset) {
-            bmiState.weight = 0.0;
-            bmiState.height = 0.0;
-            bmiState.result = null;
-        } else {
-            bmiState.weight = (weight === null || weight === undefined) ?
-                parseFloat(document.getElementById('weight').value) : weight;
-            bmiState.height = (height === null || height === undefined) ?
-                parseFloat(document.getElementById('height').value) : height;
-            bmiState.result = (result === null || result === undefined) ?
-                bmiState.weight / Math.pow(bmiState.height, 2) : result;
-        }
+        bmiState.weight = (weight === null || weight === undefined) ?
+            parseFloat(document.getElementById('weight').value) : weight;
+        bmiState.height = (height === null || height === undefined) ?
+            parseFloat(document.getElementById('height').value) : height;
+        bmiState.result = (result === null || result === undefined) ?
+            bmiState.weight / Math.pow(bmiState.height, 2) : result;
 
         document.getElementsByName('weight').item(0).value = bmiState.weight;
         document.getElementsByName('height').item(0).value = bmiState.height.toFixed(2);
 
         if ((bmiState.result !== null && bmiState.result !== undefined)
-            && !isNaN(bmiState.result)
-            && isFinite(bmiState.result)) {
+            && !isNaN(bmiState.result) && isFinite(bmiState.result)) {
             document.getElementById('result').textContent = bmiState.result.toFixed(2);
             document.getElementById('result').classList.remove('invalid');
             document.getElementById('result').classList.toggle(
@@ -204,6 +205,7 @@ function initAuth() {
     const storedAccessToken = localStorage.getItem('access_token');
     console.log('[YanuX Skeletron] Stored Access Token', storedAccessToken);
     const loginButton = document.querySelector('#login > a');
+
     if (storedAccessToken) {
         loginButton.textContent = 'Logout';
         loginButton.onclick = function (e) {
@@ -219,6 +221,7 @@ function initAuth() {
         initYanuxCoordinator(new Credentials("yanux", [storedAccessToken, CLIENT_ID]));
         showUi();
     }
+
     /**
      * If no access token is available we change the login button link to point to YanuX Auth OAuth 2.0 endpoint. We 
      * also show an alert just to tell people what to do.
@@ -226,6 +229,7 @@ function initAuth() {
     else {
         loginButton.setAttribute('href',
             `http://${location.hostname}:3001/oauth2/authorize?client_id=yanux-skeletron&response_type=token&redirect_uri=${location.href}`);
+            //`https://yanux-auth.herokuapp.com/oauth2/authorize?client_id=yanux-skeletron&response_type=token&redirect_uri=${location.href}`);
         alert('Please use the button on the top left corner to login into the application.')
     }
 }
@@ -355,7 +359,7 @@ async function resourceSubscriptionSubscriptionHandler(data, eventType) {
     if (eventType !== 'removed') {
         try {
             const resourceData = await coordinator.selectResource(resourceSubscriptionHandler, data.resource);
-            updateBmi(resourceData, true);
+            updateBmi(resourceData);
         } catch (e) { console.error('[YanuX Skeeltron] Resource Subscription Subscriber Handler Error:', e); }
     }
 }
