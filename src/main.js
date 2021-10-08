@@ -16,7 +16,6 @@
  * This is the URL that you can use to connect the YanuX Coordinator to the YanuX Broker.
  */
 const BROKER_URL = `http://${location.hostname}:3002`;
-//const BROKER_URL = 'https://yanux-broker.herokuapp.com';
 
 /**
  * This is the base URL for the services provided by the YanuX Orchestrator (i.e., by the YanuX Scavenger on Android or 
@@ -24,7 +23,6 @@ const BROKER_URL = `http://${location.hostname}:3002`;
  * application.
  */
 const LOCAL_DEVICE_URL = 'http://localhost:3003';
-//const LOCAL_DEVICE_URL = 'https://albuquerques.net/yanux/device0';
 
 /**
  * The ID of the application that was previously registered at the YanuX Auth website.
@@ -80,12 +78,6 @@ window.addEventListener('DOMContentLoaded', async function (e) {
      * Initializing the authentication process which will eventually initialize the YanuX Coordinator components.
      */
     initAuth();
-    //showUi(true);
-    // initYanuxCoordinator(
-    //     new Credentials("yanux",
-    //         ['AMcLG1hwXtZrB_XafwPOFT8PUEdnnoUxpvF0thpaxE2RxTL1fesjDacxkPev2hKec3czVR596prl7OV-qScMa8ux3ac5anv70E6dCAB-tQqevm8fcv-YjItQjFxI0ba8s7_xPcKZi9bYwbTnkd8BkIvUPM-3VsRANOCZGQv0WSGDlpSRi4S2KDdfmOmAEXNrH8EzOKyTlYIQqqfMR8la7aZbREkNC51BCvEMS1tkc7MzyNt1h5zXVOoP3S-aJlrG',
-    //             CLIENT_ID]
-    //     ));
     //showUi();
 });
 
@@ -229,7 +221,6 @@ function initAuth() {
     else {
         loginButton.setAttribute('href',
             `http://${location.hostname}:3001/oauth2/authorize?client_id=yanux-skeletron&response_type=token&redirect_uri=${location.href}`);
-            //`https://yanux-auth.herokuapp.com/oauth2/authorize?client_id=yanux-skeletron&response_type=token&redirect_uri=${location.href}`);
         alert('Please use the button on the top left corner to login into the application.')
     }
 }
