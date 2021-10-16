@@ -481,7 +481,6 @@ async function resourceSelected(e) {
      * <Exercise 9>: 
      * Implement the body of the function that gets called when a user selects a resource in the YanuX Resource Management Element.
      * TIP: The Coordinator has a method called "selectResource" that can be used to select a new resource. 
-     * Once the new selection is done you can use the "updateBmi" function to update the UI of the application with the new application state.
      */
 
 
